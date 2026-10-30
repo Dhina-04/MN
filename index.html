@@ -85,8 +85,25 @@ body.in .h{opacity:1;transform:none}
 #ft{background:linear-gradient(var(--bg),#ecd9b8);padding:12px 24px 0;line-height:0;overflow:hidden;text-align:center}
 #ft img{width:min(56%,240px);height:auto;display:block;margin:0 auto;filter:drop-shadow(0 6px 12px #5c1a2633)}
 #close p{font-size:1.05rem;margin-top:18px}
+#audioBtn{position:fixed;top:16px;right:16px;z-index:9999;width:34px;height:34px;border-radius:50%;background:rgba(255,250,240,0.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1.5px solid rgba(181,131,47,0.45);color:#5c1a26;display:none;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,0.18);transition:transform .2s ease,background .2s ease,border-color .2s ease;padding:0;outline:none;-webkit-tap-highlight-color:transparent}
+#audioBtn:hover{transform:scale(1.1);background:#fff;border-color:#b5832f;box-shadow:0 6px 18px rgba(181,131,47,0.35)}
+#audioBtn:active{transform:scale(0.95)}
+#audioBtn svg{width:14px;height:14px;display:block}
 </style></head>
 <body class="lock">
+<audio id="bgMusic" src="music.mp3" preload="auto" loop></audio>
+<button id="audioBtn" aria-label="Toggle audio" title="Mute / Unmute">
+  <svg class="audio-on" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor"></polygon>
+    <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+    <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+  </svg>
+  <svg class="audio-off" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor"></polygon>
+    <line x1="23" y1="9" x2="17" y2="15"></line>
+    <line x1="17" y1="9" x2="23" y2="15"></line>
+  </svg>
+</button>
 <div id="hero">
   <div class="st sA">
     <div class="pl" data-s=".2"><div class="zm bg"></div></div>
@@ -199,6 +216,17 @@ body.in .h{opacity:1;transform:none}
     openBtn.appendChild(ripple);
     openBtn.classList.add("clicked");
 
+    var bgMusic = document.getElementById("bgMusic");
+    var audioBtn = document.getElementById("audioBtn");
+    if (bgMusic) {
+      bgMusic.play().then(function() {
+        if (audioBtn) audioBtn.style.display = "inline-flex";
+      }).catch(function(err) {
+        console.log("Audio autoplay prevented or error:", err);
+        if (audioBtn) audioBtn.style.display = "inline-flex";
+      });
+    }
+
     setTimeout(function() {
       void document.body.offsetWidth;
       document.body.classList.add("in");
@@ -208,6 +236,25 @@ body.in .h{opacity:1;transform:none}
       }, 2600);
     }, 180);
   });
+
+  var audioBtn = document.getElementById("audioBtn");
+  var bgMusic = document.getElementById("bgMusic");
+  if (audioBtn && bgMusic) {
+    var iconOn = audioBtn.querySelector(".audio-on");
+    var iconOff = audioBtn.querySelector(".audio-off");
+    audioBtn.addEventListener("click", function(e) {
+      e.stopPropagation();
+      if (bgMusic.paused) {
+        bgMusic.play();
+        if (iconOn) iconOn.style.display = "block";
+        if (iconOff) iconOff.style.display = "none";
+      } else {
+        bgMusic.pause();
+        if (iconOn) iconOn.style.display = "none";
+        if (iconOff) iconOff.style.display = "block";
+      }
+    });
+  }
 })();
 </script>
 </body></html>

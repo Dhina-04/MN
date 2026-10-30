@@ -1,4 +1,4 @@
-$port = 8080
+﻿$port = 8080
 $folder = "C:\Users\dhina\.gemini\antigravity\scratch\wedding-invitation"
 $listener = New-Object System.Net.HttpListener
 $listener.Prefixes.Add("http://localhost:$port/")
@@ -22,6 +22,7 @@ try {
             elseif ($filePath.EndsWith(".webp")) { $response.ContentType = "image/webp" }
             elseif ($filePath.EndsWith(".jpeg") -or $filePath.EndsWith(".jpg")) { $response.ContentType = "image/jpeg" }
             elseif ($filePath.EndsWith(".png")) { $response.ContentType = "image/png" }
+            elseif ($filePath.EndsWith(".mp3")) { $response.ContentType = "audio/mpeg" }
             $response.ContentLength64 = $bytes.Length
             $response.OutputStream.Write($bytes, 0, $bytes.Length)
         } else {
